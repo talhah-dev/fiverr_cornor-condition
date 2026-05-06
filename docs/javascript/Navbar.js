@@ -19,14 +19,12 @@ if (navbar) {
     .map(({ label, href }) => {
       const isActive = href === currentPath;
       return `
-        <a
-          href="${href}"
+        <a href="${href}"
           class="rounded-full px-4 py-2 text-sm font-medium uppercase transition ${
             isActive
-              ? "bg-white/18 text-white"
+              ? "bg-white/20 text-white"
               : "text-white hover:bg-white hover:text-black"
-          }"
-        >
+          }">
           ${label}
         </a>
       `;
@@ -36,10 +34,8 @@ if (navbar) {
   const mobileLinks = navLinks
     .map(
       ({ label, href }) => `
-        <a
-          href="${href}"
-          class="rounded-full px-4 py-3 text-sm font-medium uppercase text-white transition hover:bg-white hover:text-black"
-        >
+        <a href="${href}"
+          class="block px-4 py-3 text-sm font-medium uppercase text-white hover:bg-white hover:text-black rounded-lg">
           ${label}
         </a>
       `
@@ -47,87 +43,82 @@ if (navbar) {
     .join("");
 
   navbar.innerHTML = `
-    <header class="fixed inset-x-0 top-0 z-50 px-4 py-4 sm:px-6">
-      <div class="mx-auto max-w-6xl rounded-full border border-red-200/45 bg-red-500/35 px-4 py-3 shadow-[0_12px_40px_rgba(127,29,29,0.28)] backdrop-blur-xl">
-        <div class="flex items-center justify-center">
-          <nav class="hidden flex-wrap items-center justify-center gap-2 lg:flex">
+    <header class="z-50 px-4 py-4 sm:px-6">
+      <div class="mx-auto max-w-7xl">
+        <div class="flex items-center justify-between">
+
+          <div class="w-10"></div>
+
+          <nav class="hidden lg:flex justify-center flex-1 gap-2">
             ${desktopLinks}
           </nav>
 
-          <button
-            id="navbarToggle"
-            type="button"
-            aria-label="Open navigation"
-            aria-expanded="false"
-            class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-red-400/40 text-white transition hover:bg-white/10 hover:text-white lg:hidden"
-          >
-            <i class="fa-solid fa-bars text-sm"></i>
+          <button id="navbarToggle"
+            class="lg:hidden h-10 w-10 flex items-center justify-center text-white">
+            <i class="fa-solid fa-bars"></i>
           </button>
+
         </div>
       </div>
     </header>
 
-    <div
-      id="navbarBackdrop"
-      class="pointer-events-none fixed inset-0 z-40 bg-black/45 opacity-0 transition-opacity duration-300 lg:hidden"
-    ></div>
+    <div id="navbarBackdrop"
+      class="fixed inset-0 bg-black/50 opacity-0 pointer-events-none transition duration-300 z-40">
+    </div>
 
-    <div
-      id="navbarMenu"
-      class="pointer-events-none fixed inset-x-4 top-24 z-50 translate-y-4 opacity-0 transition-all duration-300 ease-out lg:hidden sm:inset-x-6"
-    >
-      <nav class="grid grid-cols-1 gap-2 rounded-2xl border border-red-200/40 bg-red-600/70 p-4 text-center shadow-[0_24px_80px_rgba(0,0,0,0.28)] backdrop-blur-2xl">
+    <div id="navbarMenu"
+      class="fixed top-0 right-0 h-full w-72 bg-red-600 transform translate-x-full transition-transform duration-300 z-50 flex flex-col">
+
+      <div class="flex justify-end p-4">
+        <button id="closeMenu" class="text-white text-2xl">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <nav class="flex flex-col gap-2 px-4">
         ${mobileLinks}
       </nav>
+
     </div>
   `;
 
   const toggleButton = document.getElementById("navbarToggle");
   const menu = document.getElementById("navbarMenu");
   const backdrop = document.getElementById("navbarBackdrop");
+  const closeBtn = document.getElementById("closeMenu");
 
-  if (toggleButton && menu && backdrop) {
-    const setMenuState = (isOpen) => {
-      toggleButton.setAttribute("aria-expanded", String(isOpen));
-      toggleButton.innerHTML = isOpen
-        ? '<i class="fa-solid fa-xmark text-base"></i>'
-        : '<i class="fa-solid fa-bars text-base"></i>';
+  let isOpen = false;
 
-      menu.classList.toggle("pointer-events-none", !isOpen);
-      menu.classList.toggle("opacity-0", !isOpen);
-      menu.classList.toggle("translate-y-4", !isOpen);
-      menu.classList.toggle("opacity-100", isOpen);
-      menu.classList.toggle("translate-y-0", isOpen);
+  const openMenu = () => {
+    isOpen = true;
+    menu.classList.remove("translate-x-full");
+    backdrop.classList.remove("opacity-0", "pointer-events-none");
+    backdrop.classList.add("opacity-100");
+  };
 
-      backdrop.classList.toggle("pointer-events-none", !isOpen);
-      backdrop.classList.toggle("opacity-0", !isOpen);
-      backdrop.classList.toggle("opacity-100", isOpen);
-    };
+  const closeMenu = () => {
+    isOpen = false;
+    menu.classList.add("translate-x-full");
+    backdrop.classList.remove("opacity-100");
+    backdrop.classList.add("opacity-0", "pointer-events-none");
+  };
 
-    toggleButton.addEventListener("click", () => {
-      const isOpen = toggleButton.getAttribute("aria-expanded") === "true";
-      setMenuState(!isOpen);
-    });
+  toggleButton.addEventListener("click", (e) => {
+    e.stopPropagation();
+    isOpen ? closeMenu() : openMenu();
+  });
 
-    backdrop.addEventListener("click", () => {
-      setMenuState(false);
-    });
+  closeBtn.addEventListener("click", closeMenu);
 
-    document.addEventListener("click", (event) => {
-      const isOpen = toggleButton.getAttribute("aria-expanded") === "true";
-      if (!isOpen) {
-        return;
-      }
+  backdrop.addEventListener("click", closeMenu);
 
-      if (!navbar.contains(event.target)) {
-        setMenuState(false);
-      }
-    });
+  document.addEventListener("click", (e) => {
+    if (isOpen && !menu.contains(e.target) && !toggleButton.contains(e.target)) {
+      closeMenu();
+    }
+  });
 
-    menu.querySelectorAll("a").forEach((link) => {
-      link.addEventListener("click", () => {
-        setMenuState(false);
-      });
-    });
-  }
+  menu.querySelectorAll("a").forEach((link) => {
+    link.addEventListener("click", closeMenu);
+  });
 }

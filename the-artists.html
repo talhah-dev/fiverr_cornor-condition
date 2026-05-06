@@ -41,21 +41,25 @@
     <link rel="stylesheet" href="./docs/Style.css" />
 </head>
 
-<body class="m-0 bg-gradient-to-br from-[#ff0000] to-red-700">
+<body class="m-0 bg-[#ff0000]">
 
     <div id="navbar"></div>
 
     <main class="px-4 pb-16 pt-32 sm:px-6 lg:px-10">
-        <section class="mx-auto flex min-h-[60vh] max-w-5xl items-center justify-center text-white">
-            <div class="w-full px-6 py-16 text-center sm:px-10 sm:py-20">
-                <p class="text-sm uppercase text-white/70">The Artists</p>
-                <div class="mt-10 flex flex-col items-center gap-6">
+
+        <h2 class="text-4xl text-center font-medium text-white mb-6">
+            The Artists
+        </h2>
+
+        <section class="mx-auto flex  max-w-5xl items-center justify-center text-white">
+            <div class="w-full px-6  text-center">
+                <div class="mt-10 flex flex-col items-center justify-between gap-6 md:flex-row items-center gap-6">
                     <a href="haley-castro.html"
-                        class="inline-flex min-w-[260px] items-center justify-center rounded-full bg-white px-8 py-4 text-2xl font-medium text-black transition hover:bg-black hover:text-white sm:text-4xl">
+                        class="inline-flex min-w-[210px] min-h-[210px] items-center justify-center rounded-full bg-[#f4ff00] px-8 py-4 text-2xl font-medium text-[#ff0000] transition hover:bg-[#0010ff] hover:text-[#f4ff00] ">
                         Haley Castro
                     </a>
                     <a href="evan-ho.html"
-                        class="inline-flex min-w-[260px] items-center justify-center rounded-full bg-white px-8 py-4 text-2xl font-medium text-black transition hover:bg-black hover:text-white sm:text-4xl">
+                        class="inline-flex min-w-[260px] items-center justify-center rounded-2xl bg-[#0010ff] px-8 py-4 text-2xl font-medium text-[#f4ff00] transition hover:bg-[#f4ff00] hover:text-[#ff0000] ">
                         Evan Ho
                     </a>
                 </div>
@@ -64,7 +68,6 @@
     </main>
 
 
-    <div id="footer"></div>
 
     <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
     <script src="https://unpkg.com/lenis@1.3.1/dist/lenis.min.js"></script>
@@ -73,7 +76,6 @@
 
     <script src="./docs/javascript/global.js"></script>
     <script src="./docs/javascript/Navbar.js"></script>
-    <script src="./docs/javascript/Footer.js"></script>
     <script>
         const gallery = document.getElementById("lightbox-gallery");
 
