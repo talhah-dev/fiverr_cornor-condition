@@ -45,7 +45,24 @@
 
     <div id="navbar"></div>
 
-    <main class="px-4 pb-16 pt-32 sm:px-6 lg:px-10">
+    <main id="portfolioGate" class="flex min-h-screen items-center justify-center px-4 pb-16 pt-32 sm:px-6 lg:px-10">
+        <section class="w-full max-w-3xl">
+            <form id="portfolioPasswordForm"
+                class="mx-auto flex w-full max-w-[560px] items-center rounded-full border border-black/70 bg-white/95 p-2 shadow-[0_10px_40px_rgba(0,0,0,0.12)]">
+                <input id="portfolioPasswordInput" type="password" placeholder="Enter password..."
+                    class="h-14 flex-1 rounded-full border-0 bg-transparent px-6 text-xl text-neutral-700 placeholder:text-neutral-400 focus:outline-none" />
+                <button type="submit"
+                    class="rounded-full bg-neutral-300 px-8 py-4 text-xl font-semibold text-white transition hover:bg-neutral-800">
+                    Submit
+                </button>
+            </form>
+            <p id="portfolioPasswordError" class="mt-4 hidden text-center text-sm font-medium text-white">
+                Password failed
+            </p>
+        </section>
+    </main>
+
+    <main id="portfolioProtected" class="hidden px-4 pb-16 pt-32 sm:px-6 lg:px-10">
         <section class="mx-auto max-w-7xl text-white">
             <div class="mx-auto max-w-3xl text-center">
                 <p class="text-4xl font-medium text-white">Portfolio</p>
@@ -157,6 +174,38 @@
     <script src="./docs/javascript/Navbar.js"></script>
     <script src="./docs/javascript/Footer.js"></script>
     <script>
+        const portfolioPassword = "sensational";
+        const portfolioStorageKey = "cornerConditionPortfolioAccess";
+        const portfolioGate = document.getElementById("portfolioGate");
+        const portfolioProtected = document.getElementById("portfolioProtected");
+        const portfolioForm = document.getElementById("portfolioPasswordForm");
+        const portfolioInput = document.getElementById("portfolioPasswordInput");
+        const portfolioError = document.getElementById("portfolioPasswordError");
+
+        const unlockPortfolio = () => {
+            portfolioGate.classList.add("hidden");
+            portfolioProtected.classList.remove("hidden");
+        };
+
+        if (window.sessionStorage.getItem(portfolioStorageKey) === "granted") {
+            unlockPortfolio();
+        }
+
+        portfolioForm?.addEventListener("submit", (event) => {
+            event.preventDefault();
+
+            if (portfolioInput.value === portfolioPassword) {
+                window.sessionStorage.setItem(portfolioStorageKey, "granted");
+                portfolioError.classList.add("hidden");
+                unlockPortfolio();
+                return;
+            }
+
+            portfolioError.classList.remove("hidden");
+            portfolioInput.value = "";
+            portfolioInput.focus();
+        });
+
         const gallery = document.getElementById("lightbox-gallery");
 
         if (gallery && window.lightGallery) {
